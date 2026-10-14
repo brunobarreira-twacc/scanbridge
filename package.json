@@ -1,0 +1,29 @@
+{
+  "name": "scanbridge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "scanbridge": "dist/src/cli/main.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test \"dist/tests/unit/**/*.test.js\" \"dist/tests/contract/**/*.test.js\"",
+    "test:unit": "npm run build && node --test \"dist/tests/unit/**/*.test.js\"",
+    "gen:schemas": "node scripts/gen-schemas.mjs",
+    "check:schemas": "node scripts/gen-schemas.mjs --check"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "ajv": "^8.20.0",
+    "typescript": "^7.0.2"
+  }
+}
