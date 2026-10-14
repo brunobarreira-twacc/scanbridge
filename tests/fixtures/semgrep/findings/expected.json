@@ -1,0 +1,19 @@
+{
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": ["unmapped_severity"],
+  "coverageLoss": [],
+  "producerVersion": null,
+  "candidates": [
+    { "ruleId": "rules.hardcoded-secret", "severity": "critical", "severityOriginal": "CRITICAL", "producerFingerprint": "fp-a", "redactionsApplied": true, "snippet": { "ok": true, "text": "API_KEY = \"[REDACTED]\"" } },
+    { "ruleId": "rules.sql-injection", "severity": "high", "severityOriginal": "ERROR", "redactionsApplied": true, "snippet": { "ok": true, "text": "db.query(\"SELECT * FROM t WHERE id=\" + id)" } },
+    { "ruleId": "rules.eval", "severity": "high", "severityOriginal": "HIGH", "redactionsApplied": false, "snippet": { "ok": false, "reason": "too_large" } },
+    { "ruleId": "rules.xss", "severity": "medium", "severityOriginal": "MEDIUM" },
+    { "ruleId": "rules.debug", "severity": "medium", "severityOriginal": "WARNING" },
+    { "ruleId": "rules.weak-hash", "severity": "low", "severityOriginal": "LOW" },
+    { "ruleId": "rules.info-note", "severity": "info", "severityOriginal": "INFO" },
+    { "ruleId": "rules.experiment", "severity": "info", "severityOriginal": "EXPERIMENT" },
+    { "ruleId": "rules.inventory", "severity": "info", "severityOriginal": "INVENTORY" },
+    { "ruleId": "rules.new-thing", "severity": "unknown", "severityOriginal": "BLOCKER" }
+  ]
+}

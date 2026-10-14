@@ -1,0 +1,10 @@
+{
+  "completeness": "partial",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [
+    "partial_coverage", "partial_coverage", "partial_coverage", "partial_coverage",
+    "partial_coverage", "partial_coverage", "partial_coverage", "partial_coverage",
+    "partial_coverage", "partial_coverage", "partial_coverage", "partial_coverage"
+  ]
+}

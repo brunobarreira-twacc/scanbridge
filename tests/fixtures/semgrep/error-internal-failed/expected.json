@@ -1,0 +1,6 @@
+{
+  "completeness": "failed",
+  "unusableCount": 0,
+  "diagnostics": ["tool_execution_failed"],
+  "coverageLoss": []
+}

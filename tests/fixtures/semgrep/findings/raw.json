@@ -1,0 +1,87 @@
+{
+  "results": [
+    {
+      "check_id": "rules.hardcoded-secret",
+      "path": "src/app.py",
+      "start": { "line": 10, "col": 5, "offset": 200 },
+      "end": { "line": 10, "col": 30, "offset": 225 },
+      "extra": {
+        "message": "Hardcoded key",
+        "severity": "CRITICAL",
+        "fingerprint": "fp-a",
+        "lines": "API_KEY = \"[REDACTED]\"",
+        "metavars": { "$KEY": { "abstract_content": "[REDACTED]" } },
+        "metadata": { "confidence": "HIGH", "category": "security", "references": ["https://example.test/a"] }
+      }
+    },
+    {
+      "check_id": "rules.sql-injection",
+      "path": "src/db.py",
+      "start": { "line": 12, "col": 1, "offset": 300 },
+      "end": { "line": 14, "col": 4, "offset": 340 },
+      "extra": {
+        "message": "Possible SQL injection",
+        "severity": "ERROR",
+        "lines": "db.query(\"SELECT * FROM t WHERE id=\" + id)"
+      }
+    },
+    {
+      "check_id": "rules.eval",
+      "path": "src/app.py",
+      "start": { "line": 20, "col": 1, "offset": 400 },
+      "end": { "line": 20, "col": 12, "offset": 411 },
+      "extra": { "message": "eval on input", "severity": "HIGH" }
+    },
+    {
+      "check_id": "rules.xss",
+      "path": "src/app.py",
+      "start": { "line": 30, "col": 1, "offset": 500 },
+      "end": { "line": 30, "col": 9, "offset": 508 },
+      "extra": { "message": "Reflected input", "severity": "MEDIUM" }
+    },
+    {
+      "check_id": "rules.debug",
+      "path": "src/app.py",
+      "start": { "line": 40, "col": 1, "offset": 600 },
+      "end": { "line": 40, "col": 9, "offset": 608 },
+      "extra": { "message": "Debug mode", "severity": "WARNING" }
+    },
+    {
+      "check_id": "rules.weak-hash",
+      "path": "src/app.py",
+      "start": { "line": 50, "col": 1, "offset": 700 },
+      "end": { "line": 50, "col": 9, "offset": 708 },
+      "extra": { "message": "Weak hash", "severity": "LOW" }
+    },
+    {
+      "check_id": "rules.info-note",
+      "path": "src/app.py",
+      "start": { "line": 60, "col": 1, "offset": 800 },
+      "end": { "line": 60, "col": 9, "offset": 808 },
+      "extra": { "message": "Note", "severity": "INFO" }
+    },
+    {
+      "check_id": "rules.experiment",
+      "path": "src/app.py",
+      "start": { "line": 70, "col": 1, "offset": 900 },
+      "end": { "line": 70, "col": 9, "offset": 908 },
+      "extra": { "message": "Experimental", "severity": "EXPERIMENT" }
+    },
+    {
+      "check_id": "rules.inventory",
+      "path": "src/app.py",
+      "start": { "line": 80, "col": 1, "offset": 1000 },
+      "end": { "line": 80, "col": 9, "offset": 1008 },
+      "extra": { "message": "Inventory", "severity": "INVENTORY" }
+    },
+    {
+      "check_id": "rules.new-thing",
+      "path": "src/app.py",
+      "start": { "line": 90, "col": 1, "offset": 1100 },
+      "end": { "line": 90, "col": 9, "offset": 1108 },
+      "extra": { "message": "Unknown severity", "severity": "BLOCKER" }
+    }
+  ],
+  "errors": [],
+  "paths": { "scanned": ["src/app.py", "src/db.py"] }
+}

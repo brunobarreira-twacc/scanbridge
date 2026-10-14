@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "check_id": "rules.sql",
+      "path": "src/a.py",
+      "start": { "line": 1, "col": 1, "offset": 0 },
+      "end": { "line": 1, "col": 5, "offset": 4 },
+      "extra": { "message": "m", "severity": "ERROR" }
+    }
+  ],
+  "errors": [
+    { "type": "Timeout", "level": "info", "message": "timed out on a rule" },
+    { "type": "Lexical error", "level": "error", "message": "bad token" },
+    { "type": "Syntax error", "level": "error", "message": "bad syntax" },
+    { "type": "Other syntax error", "level": "error", "message": "bad syntax" },
+    { "type": "AST builder error", "level": "error", "message": "ast" },
+    { "type": "PartialParsing", "level": "error", "message": "partial" },
+    { "type": "Out of memory", "level": "error", "message": "oom" },
+    { "type": "Stack overflow", "level": "error", "message": "stack" },
+    { "type": "Fixpoint timeout", "level": "error", "message": "fixpoint" },
+    { "type": "Timeout during interfile analysis", "level": "error", "message": "interfile" },
+    { "type": "OOM during interfile analysis", "level": "error", "message": "interfile oom" },
+    { "type": "Too many matches", "level": "error", "message": "matches" }
+  ],
+  "paths": { "scanned": ["src/a.py"] }
+}

@@ -1,0 +1,7 @@
+{
+  "results": [],
+  "errors": [
+    { "type": "Fatal error", "level": "error", "message": "fatal" }
+  ],
+  "paths": { "scanned": ["src/a.py"] }
+}

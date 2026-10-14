@@ -1,0 +1,6 @@
+{
+  "completeness": "partial",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": ["unmapped_error_type"]
+}

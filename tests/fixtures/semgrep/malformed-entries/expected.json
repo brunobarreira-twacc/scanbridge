@@ -1,0 +1,6 @@
+{
+  "completeness": "partial",
+  "unusableCount": 3,
+  "diagnostics": ["malformed_report"],
+  "coverageLoss": []
+}
