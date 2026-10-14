@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "command": {
+      "type": "string",
+      "const": "scan"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial",
+        "unverified",
+        "failed"
+      ]
+    },
+    "exit_code": {
+      "anyOf": [
+        {
+          "type": "number",
+          "const": 0
+        },
+        {
+          "type": "number",
+          "const": 2
+        },
+        {
+          "type": "number",
+          "const": 3
+        },
+        {
+          "type": "number",
+          "const": 4
+        }
+      ]
+    },
+    "scan_id": {
+      "type": "string"
+    },
+    "adapter": {
+      "type": "string",
+      "enum": [
+        "semgrep",
+        "zap"
+      ]
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "finished_at": {
+      "type": "string"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "authoritative": {
+      "type": "boolean"
+    },
+    "non_authoritative_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "partial_scan",
+          "registry_rules",
+          "auto_rules",
+          "fingerprint_degraded",
+          "unmapped_severity",
+          "offline_report"
+        ]
+      }
+    },
+    "findings_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "tool_unavailable",
+              "tool_execution_failed",
+              "tool_timeout",
+              "partial_coverage",
+              "resource_limit_exceeded",
+              "unmapped_error_type",
+              "unmapped_severity",
+              "non_deterministic_rules",
+              "out_of_scope_target",
+              "redaction_failed",
+              "malformed_report",
+              "target_identity_unavailable",
+              "target_changed_during_scan",
+              "fingerprint_degraded",
+              "no_files_scanned",
+              "no_urls_discovered",
+              "zap_session_not_clean",
+              "zap_unreachable_or_rejected",
+              "bad_api_key",
+              "target_url_overridden"
+            ]
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warn",
+              "error"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "semgrep",
+              "zap"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "truncated": {
+                "type": "boolean"
+              },
+              "original_length": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "untrusted": {
+                "type": "boolean",
+                "const": true
+              }
+            },
+            "required": [
+              "text",
+              "truncated",
+              "original_length",
+              "untrusted"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "code",
+          "level",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "normalized": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "directory",
+        "raw",
+        "normalized"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "command",
+    "status",
+    "exit_code",
+    "scan_id",
+    "adapter",
+    "started_at",
+    "finished_at",
+    "duration_ms",
+    "authoritative",
+    "non_authoritative_reasons",
+    "findings_count",
+    "exclusions",
+    "diagnostics",
+    "artifacts"
+  ],
+  "additionalProperties": false
+}
