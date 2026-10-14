@@ -1,0 +1,7 @@
+# Second synthetic rule file for the full configuration fixture.
+rules:
+  - id: synthetic-config-fixture-extra
+    languages: [javascript]
+    severity: INFO
+    message: Synthetic extra fixture rule.
+    pattern: otherCall($X)

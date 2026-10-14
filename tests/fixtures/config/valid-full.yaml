@@ -1,0 +1,23 @@
+version: 1
+redaction:
+  headers: [X-Trace-Token]
+  json_keys: [sessionId]
+  env_vars: [SCANBRIDGE_FIXTURE_SECRET]
+tools:
+  semgrep:
+    enabled: true
+    config:
+      rules: [rules/security.yaml, rules/extra.yaml]
+      rule_timeout_seconds: 10
+      timeout_seconds: 900
+  zap:
+    enabled: true
+    config:
+      api_url_env: SCANBRIDGE_ZAP_API_URL
+      api_key_env: SCANBRIDGE_ZAP_API_KEY
+      target_url_env: SCANBRIDGE_ZAP_TARGET_URL
+      allowed_target_origins: ["http://127.0.0.1:8080", "https://staging.example.test"]
+      session_mode: reset
+      active: false
+      spider_timeout_seconds: 600
+      passive_timeout_seconds: 60

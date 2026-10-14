@@ -1,0 +1,7 @@
+# Synthetic Semgrep rule file used by config loader tests. Not a working rule.
+rules:
+  - id: synthetic-config-fixture-rule
+    languages: [javascript]
+    severity: WARNING
+    message: Synthetic fixture rule.
+    pattern: dangerousCall($X)
