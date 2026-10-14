@@ -1,0 +1,5 @@
+{
+  "results": [],
+  "errors": [],
+  "paths": { "scanned": ["src/a.py", "src/b.py"] }
+}

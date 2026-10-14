@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "check_id": "rules.sql",
+      "path": "src/a.py",
+      "start": { "line": 1, "col": 1, "offset": 0 },
+      "end": { "line": 1, "col": 5, "offset": 4 },
+      "extra": { "message": "m", "severity": "ERROR" }
+    }
+  ],
+  "errors": [
+    { "type": "Brand new failure", "level": "error", "message": "unknown type" }
+  ],
+  "paths": { "scanned": ["src/a.py"] }
+}

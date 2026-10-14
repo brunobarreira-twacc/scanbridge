@@ -1,0 +1,18 @@
+{
+  "results": [
+    {
+      "check_id": "rules.sql",
+      "path": "src/a.py",
+      "start": { "line": 1, "col": 1, "offset": 0 },
+      "end": { "line": 1, "col": 5, "offset": 4 },
+      "extra": { "message": "m", "severity": "ERROR" }
+    }
+  ],
+  "errors": [
+    { "type": ["PartialParsing", "SemgrepWarning"], "level": "error", "message": "list with coverage loss" },
+    { "type": ["SemgrepWarning", "Missing plugin"], "level": "error", "message": "list with rule problem" },
+    { "type": ["Fatal error"], "level": "error", "message": "list with internal error" },
+    { "type": ["SemgrepWarning"], "level": "info", "message": "list with diagnostic only" }
+  ],
+  "paths": { "scanned": ["src/a.py"] }
+}

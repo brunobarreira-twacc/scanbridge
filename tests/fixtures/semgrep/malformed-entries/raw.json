@@ -1,0 +1,16 @@
+{
+  "results": [
+    {
+      "check_id": "rules.sql",
+      "path": "src/a.py",
+      "start": { "line": 1, "col": 1, "offset": 0 },
+      "end": { "line": 1, "col": 5, "offset": 4 },
+      "extra": { "message": "m", "severity": "ERROR" }
+    },
+    { "check_id": "rules.missing-path", "start": { "line": 2, "col": 1 }, "end": { "line": 2, "col": 3 } },
+    { "path": "src/a.py", "start": { "line": 3, "col": 1 }, "end": { "line": 3, "col": 3 } },
+    { "check_id": "rules.missing-end", "path": "src/a.py", "start": { "line": 4, "col": 1 } }
+  ],
+  "errors": [],
+  "paths": { "scanned": ["src/a.py"] }
+}

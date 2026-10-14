@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "check_id": "rules.sql",
+      "path": "src/a.py",
+      "start": { "line": 1, "col": 1, "offset": 0 },
+      "end": { "line": 1, "col": 5, "offset": 4 },
+      "extra": { "message": "m", "severity": "ERROR" }
+    }
+  ],
+  "errors": [
+    { "type": "Rule parse error", "level": "error", "message": "bad rule" },
+    { "type": "InvalidRuleSchemaError", "level": "error", "message": "schema" },
+    { "type": "Incompatible rule", "level": "error", "message": "incompatible" },
+    { "type": "Pattern parse error", "level": "error", "message": "pattern" },
+    { "type": "Missing plugin", "level": "error", "message": "plugin" }
+  ],
+  "paths": { "scanned": ["src/a.py"] }
+}

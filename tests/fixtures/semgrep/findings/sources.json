@@ -1,0 +1,5 @@
+{
+  "src/app.py:10:10": { "ok": true, "text": "API_KEY = \"[REDACTED]\"", "redacted": true },
+  "src/db.py:12:14": { "ok": true, "text": "db.query(\"SELECT * FROM t WHERE id=\" + id)", "redacted": false },
+  "src/app.py:20:20": { "ok": false, "reason": "too_large" }
+}
