@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "command": {
+      "type": "string",
+      "const": "doctor"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "semgrep",
+              "zap"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "unavailable",
+              "skipped"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "api_key": {
+            "type": "string",
+            "enum": [
+              "present",
+              "absent"
+            ]
+          },
+          "api_key_verified": {
+            "type": "boolean"
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "tool_unavailable",
+                    "tool_execution_failed",
+                    "tool_timeout",
+                    "partial_coverage",
+                    "resource_limit_exceeded",
+                    "unmapped_error_type",
+                    "unmapped_severity",
+                    "non_deterministic_rules",
+                    "out_of_scope_target",
+                    "redaction_failed",
+                    "malformed_report",
+                    "target_identity_unavailable",
+                    "target_changed_during_scan",
+                    "fingerprint_degraded",
+                    "no_files_scanned",
+                    "no_urls_discovered",
+                    "zap_session_not_clean",
+                    "zap_unreachable_or_rejected",
+                    "bad_api_key",
+                    "target_url_overridden"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "version",
+          "problems"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "command",
+    "ok",
+    "tools"
+  ],
+  "additionalProperties": false
+}
