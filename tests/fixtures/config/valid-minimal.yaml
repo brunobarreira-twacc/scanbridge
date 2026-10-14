@@ -1,0 +1,13 @@
+version: 1
+tools:
+  semgrep:
+    enabled: true
+    config:
+      rules: [rules/security.yaml]
+  zap:
+    enabled: true
+    config:
+      api_url_env: SCANBRIDGE_ZAP_API_URL
+      api_key_env: SCANBRIDGE_ZAP_API_KEY
+      target_url_env: SCANBRIDGE_ZAP_TARGET_URL
+      allowed_target_origins: ["http://127.0.0.1:8080"]
