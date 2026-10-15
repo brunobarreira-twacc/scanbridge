@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="120" viewBox="0 0 480 120" role="img" aria-labelledby="t">
+  <title id="t">Scanbridge</title>
+  <!-- Mark: a bridge deck and arch, crossed by a scan line -->
+  <g fill="none" stroke="#14b8a6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 76 H100"/>
+    <path d="M18 76 C18 34 92 34 92 76"/>
+    <path d="M55 76 V52"/>
+  </g>
+  <path d="M4 58 H106" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7"/>
+  <circle cx="55" cy="40" r="4" fill="#6366f1"/>
+  <!-- Wordmark -->
+  <text x="128" y="76" font-family="'SF Pro Display','Segoe UI',Helvetica,Arial,sans-serif" font-size="52" letter-spacing="-1">
+    <tspan font-weight="800" fill="#14b8a6">scan</tspan><tspan font-weight="300" fill="#6366f1">bridge</tspan>
+  </text>
+</svg>
