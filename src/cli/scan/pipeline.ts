@@ -3,7 +3,7 @@ import { EXIT_CODES, FINGERPRINT_VERSION, type Completeness, type JsonValue, typ
 import type { Runner, SourceText } from '../../contracts/ports.js';
 import { sha256Hex } from '../../core/fingerprints/index.js';
 import { buildFindings, classify } from '../../core/findings/index.js';
-import { redactText, redactTree } from '../../core/redaction/index.js';
+import { redactText, redactTree, type Summary } from '../../core/redaction/index.js';
 import { serializeCanonical, serializeRaw, sha256Utf8 } from '../../core/serialization/index.js';
 import { NormalizedDocumentSchema, type NormalizedDocument } from '../../schemas/index.js';
 import type { CliDeps, CliPorts } from '../main.js';
@@ -145,7 +145,7 @@ async function execute(
   const doc = redacted.value as JsonValue;
 
   // 7. Semgrep: read and redact the source ranges.
-  const sources = semgrep ? await readSources(adapter.sourceRefs(doc), plan) : new Map<string, SourceText>();
+  const { sources, summary: sourceSummary } = semgrep ? await readSources(adapter.sourceRefs(doc), plan) : { sources: new Map<string, SourceText>(), summary: {} };
 
   // 8-9. Normalize, group and classify.
   const context: NormalizeContext = {
@@ -213,7 +213,7 @@ async function execute(
     configuration_digest: plan.configurationDigest,
     raw_sha256_before_redaction: rawBefore,
     raw_sha256_after_redaction: rawAfter,
-    redaction_summary: redacted.summary,
+    redaction_summary: mergeSummaries(redacted.summary, sourceSummary),
     findings: built.findings,
   });
   const text = serializeCanonical('NormalizedDocument', document);
@@ -273,10 +273,11 @@ function targetIdentity(plan: Plan, runner: Runner): FsTargetIdentityReader {
 async function readSources(
   refs: readonly { key: string; path: string; startLine: number; endLine: number }[],
   plan: Plan,
-): Promise<Map<string, SourceText>> {
+): Promise<{ sources: Map<string, SourceText>; summary: Summary }> {
   const semgrep = plan.semgrep;
   const sources = new Map<string, SourceText>();
-  if (!semgrep) return sources;
+  const summary: Summary = {};
+  if (!semgrep) return { sources, summary };
   const reader = new FsSourceReader(semgrep.scan.rootAbs, semgrep.scan.targetRel);
   for (const ref of refs) {
     if (sources.has(ref.key)) continue;
@@ -289,11 +290,20 @@ async function readSources(
     try {
       const result = redactText(read.text, plan.policy);
       sources.set(ref.key, { ok: true, text: result.text, redacted: result.text !== read.text });
+      // Counted once per unique reference key: repeated refs `continue` above.
+      for (const [id, count] of Object.entries(result.summary)) summary[id] = (summary[id] ?? 0) + count;
     } catch {
       sources.set(ref.key, { ok: false, reason: 'unreadable' });
     }
   }
-  return sources;
+  return { sources, summary };
+}
+
+/** Sums redaction counts by rule id, with keys in a deterministic (code unit) order. */
+function mergeSummaries(...parts: Summary[]): Summary {
+  const total: Summary = {};
+  for (const part of parts) for (const [id, count] of Object.entries(part)) total[id] = (total[id] ?? 0) + count;
+  return Object.fromEntries(Object.entries(total).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
 }
 
 function normalizedTarget(plan: Plan, first: Identity | null): NormalizedDocument['target'] {
