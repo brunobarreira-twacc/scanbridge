@@ -65,6 +65,29 @@ describe('semgrep scan: outcomes', () => {
     assert.equal(run.stderr, '');
   });
 
+  it('source-only secret: counted once in redaction_summary, never persisted, deterministic', async () => {
+    const secret = 'SyntheticBearer123';
+    const source = SOURCE_LINES.split('\n');
+    source[1] = `eval("Bearer ${secret}");`;
+    const files = { 'src/app.js': source.join('\n') };
+    // Two results on the same line share one source reference; a raw-side redaction is also present.
+    const stdout = semgrepOutput({ results: [semgrepResult(), semgrepResult()] });
+    const summaries: unknown[] = [];
+    for (const out of ['out', 'out2']) {
+      const repo = repoWith({ stdout }, files);
+      const run = await runCli(repo, ['scan', '--adapter', 'semgrep', '--target', '.', '--output', out]);
+      assert.equal(run.status, 0, run.stderr);
+      const dir = assertContract(run, repo, out) as string;
+      assert.ok(!(allArtifactText(dir) + run.stdout + run.stderr).includes(secret));
+      const normalized = readJson(join(dir, 'normalized.json'));
+      assert.equal(normalized.redaction_summary.bearer, 1);
+      assert.equal(normalized.redaction_summary['removed-path'], 2, 'raw redaction count preserved (one metavars per result)');
+      assert.equal(normalized.findings[0].redactions_applied, true);
+      summaries.push(normalized.redaction_summary);
+    }
+    assert.deepEqual(summaries[0], summaries[1]);
+  });
+
   it('findings: exact fingerprint, metavars removed from raw, hashes of original and persisted bytes', async () => {
     const stdout = semgrepOutput({ results: [semgrepResult()] });
     const repo = repoWith({ stdout });
