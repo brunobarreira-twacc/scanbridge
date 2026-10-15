@@ -26,10 +26,10 @@ Tags: **[verify]** = taken from source/docs but not yet confirmed against a real
 | Registry / auto | `--config <id>` or `auto`; `--metrics=off` is omitted because Semgrep requires metrics there; diagnostic `non_deterministic_rules`; reasons `registry_rules` / `auto_rules`; `rules_digest` null **[verify]** (V7) |
 | Raw format | `--json` stdout: `results[]`, `errors[]`, `paths.scanned`, optional `version` |
 | Process timeout | `timeout_seconds`; SIGTERM, then SIGKILL after 5 s; no usable report gives `failed` + `tool_timeout` |
-| Exit status | `0` + parseable JSON: classify below. Any non-zero exit: `failed` + `tool_execution_failed` (stderr tail is redacted, truncated `detail`). Exit 7 behavior **[verify]** |
+| Exit status | `0` + parseable JSON: classify below. Any non-zero exit: `failed` + `tool_execution_failed` (stderr tail is redacted, truncated `detail`). Verified on Semgrep 1.180.0 (V1): exit 7 emits parseable JSON with empty `results` and `paths.scanned`; it is failed, never partial. |
 | Authentication | None for local rules |
 
-`--disable-nosem` is unconditional so a remediation that only adds a `nosemgrep` comment cannot make a finding disappear. The flag exists in Semgrep's CLI source **[verify against pinned version]**.
+`--disable-nosem` is unconditional so a remediation that only adds a `nosemgrep` comment cannot make a finding disappear. Verified on Semgrep 1.180.0 (V4): plain Semgrep suppresses `// nosemgrep`; with this flag the finding is retained.
 
 Normalization: `rule_id` = `check_id`; `title` = rule id, `description` = `extra.message`, `status` always `open`; `severity_original` = `extra.severity`; `confidence`/`category`/`references` only from rule `metadata` when present as expected types; path is the repository-root-relative POSIX path (`--target` limits scope, not the path base); positions from `start`/`end` (offset ignored, it can be a dummy `-1`); snippets arrive pre-read in `sources` and are never read by the adapter; `extra.lines` kept only as redacted evidence; `extra.metavars` removed ([02](02-architecture.md)).
 
@@ -45,7 +45,7 @@ Completeness (exit 0 only). Intentional exclusions (`.gitignore`, `.semgrepignor
 | `level: info`; `SemgrepWarning` without known coverage impact | diagnostic only |
 | Any other type | partial, `unmapped_error_type` |
 
-Empty or missing `paths.scanned` gives `partial` + `no_files_scanned` (this wins over exclusion logic); empty `results` is authoritative only if at least one file was scanned and not all rules failed. List-encoded types such as `["PartialParsing", …]` **[verify]**.
+Empty or missing `paths.scanned` gives `partial` + `no_files_scanned` (this wins over exclusion logic); empty `results` is authoritative only if at least one file was scanned and not all rules failed. List-encoded types are verified on Semgrep 1.180.0 (V2) in the nested form `["PartialParsing", [{path,start,end}]]`: the strongest string element classifies the entry, here partial with `partial_coverage`, and Semgrep exits 0.
 
 Limitations: formatting or refactoring can change the snippet and thus the fingerprint; rule content for registry/auto is not pinned; Semgrep's `extra.lines`/`fingerprint` need login and are not relied on.
 

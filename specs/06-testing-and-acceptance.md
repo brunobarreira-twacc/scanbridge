@@ -24,7 +24,7 @@ Runner: `node:test`. Default automated tests need no Semgrep, ZAP or network.
 - Adapter probing, including Semgrep version leniency and ZAP loopback/key/closed-connection cases.
 - Semgrep and ZAP parsing and normalization, including every row of the Semgrep error table and both severity mappings with unknown values.
 - Schema validation: committed `schemas/` equal regenerated output; representative valid and invalid documents give the same verdict from Zod and from the emitted schema (validated with `ajv`).
-- Redaction: every built-in header, key and value pattern; env-var values; `metavars` removal; fail-closed path.
+- Redaction: every built-in header, key and value pattern; env-var values; `metavars` removal; fail-closed path; source-snippet redactions counted in `redaction_summary` once per source reference, with no secret in any artifact or console stream.
 - Fingerprints: stability across line moves and whitespace; degraded path; ZAP URL normalization; grouping into `occurrences[]`.
 - Determinism: identical inputs give identical `normalized.json` bytes.
 - Malformed, partial and oversized reports; each limit tested one below, exactly at and one above.
@@ -62,5 +62,5 @@ A synthetic, test-only secret appears in fake producer input, including a snippe
 - All coverage above passes with the default test command and no external tools.
 - Every command works as documented, and documentation lists only commands that work.
 - `doctor`, `scan` (Semgrep, ZAP live, ZAP offline) and `compare` honor stdout, stderr and exit-code contracts.
-- Semgrep and ZAP fixtures have been checked against real tool output for the pinned versions, or remain explicitly marked `[verify]`.
+- Semgrep behaviors V1, V2 and V4 are verified on 1.180.0 (see [README](README.md)). Other Semgrep fixtures are synthetic and not claimed to come from 1.180.0; ZAP fixtures and any other unverified behavior remain explicitly marked `[verify]`.
 - Runtime dependencies are `yaml` and `zod` only.

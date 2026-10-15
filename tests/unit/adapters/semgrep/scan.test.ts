@@ -108,8 +108,8 @@ test('exit 0 is ok with the raw stdout and no coverage loss', async () => {
   assert.deepEqual(out.reasons, []);
 });
 
-test('any non-zero exit is failed with a bounded stderr tail as detail [verify V1]', async () => {
-  // Exit 7 is deliberately not special-cased: V1 stays open.
+test('any non-zero exit is failed with a bounded stderr tail as detail (exit 7 verified on 1.180.0)', async () => {
+  // Exit 7 is deliberately not special-cased: its JSON has no usable findings or scanned paths.
   const stderrTail = 'x'.repeat(TEXT_FIELD_MAX + 100) + 'END';
   const out = await scan(ctx(), depsWith(new FakeRunner({ exitCode: 7, stderrTail })));
   assert.equal(out.outcome, 'failed');
