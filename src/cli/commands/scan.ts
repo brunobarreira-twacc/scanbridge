@@ -1,7 +1,8 @@
-import { errorEnvelope } from '../envelope.js';
-import { ERROR_EXIT_CODES } from '../exit.js';
+import type { ScanArgs } from '../args.js';
+import type { CliDeps } from '../main.js';
+import { runScan as run } from '../scan/run.js';
 
-/** Placeholder until T14 replaces it; every valid `scan` invocation lands here. */
-export function runScan(): { exitCode: number; output: string } {
-  return { exitCode: ERROR_EXIT_CODES.usage_error, output: errorEnvelope('usage_error', 'scan not implemented') };
+/** Replaces the T13 stub: every valid `scan` invocation lands here. */
+export function runScan(args: ScanArgs, deps: CliDeps): Promise<{ exitCode: number; output: string }> {
+  return run(args, deps);
 }
