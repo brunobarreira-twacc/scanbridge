@@ -1,5 +1,7 @@
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { catalog } from '../adapters/index.js';
+import { FetchHttpClient, NodeRunner } from '../adapters/io/index.js';
 import type { Clock, EnvReader, HttpClient, Runner } from '../contracts/ports.js';
 import type { ToolCatalog } from '../contracts/adapter.js';
 import { parseCli, type CliCommand } from './args.js';
@@ -41,7 +43,7 @@ async function dispatch(command: CliCommand, deps: CliDeps): Promise<{ exitCode:
     case 'compare':
       return runCompare(command, deps);
     case 'scan':
-      return runScan();
+      return runScan(command, deps);
   }
 }
 
@@ -51,6 +53,7 @@ if (script !== undefined && import.meta.url === pathToFileURL(realpathSync(scrip
   process.exitCode = await main(process.argv.slice(2), {
     cwd: process.cwd(),
     env: { get: (name) => process.env[name] },
+    ports: { catalog, runner: new NodeRunner(), http: new FetchHttpClient() },
     clock: { now: () => new Date(), sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
     stdout: process.stdout,
     stderr: process.stderr,
