@@ -1,0 +1,14 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    { "ruleId": "10038", "producerReference": null },
+    { "ruleId": "10096", "producerReference": null },
+    { "ruleId": "10202", "producerReference": null }
+  ]
+}

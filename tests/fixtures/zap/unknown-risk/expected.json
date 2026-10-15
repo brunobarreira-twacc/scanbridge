@@ -1,0 +1,15 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": ["unmapped_severity"],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    { "severityOriginal": "", "severity": "unknown" },
+    { "severityOriginal": "Critical", "severity": "unknown" },
+    { "severityOriginal": "Medium", "severity": "medium" },
+    { "severityOriginal": "informational", "severity": "unknown" }
+  ]
+}

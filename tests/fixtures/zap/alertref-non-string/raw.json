@@ -1,0 +1,5 @@
+{"alerts":[
+  {"pluginId":"10038","alertRef":42,"name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"http://127.0.0.1:8080/","method":"GET","param":""},
+  {"pluginId":"10096","alertRef":null,"name":"Timestamp Disclosure","risk":"Informational","confidence":"Low","url":"http://127.0.0.1:8080/api?id=1","method":"GET","param":"id"},
+  {"pluginId":"10202","alertRef":["10202-1"],"name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""}
+]}

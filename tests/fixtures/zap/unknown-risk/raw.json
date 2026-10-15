@@ -1,0 +1,7 @@
+{"alerts":[
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Critical","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"informational","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"Low","url":"http://127.0.0.1:8080/login","method":"POST","param":""}
+]}

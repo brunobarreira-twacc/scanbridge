@@ -1,0 +1,56 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    {
+      "ruleId": "10038",
+      "producerReference": "10038-1",
+      "title": "Content Security Policy (CSP) Header Not Set",
+      "description": "CSP header missing.",
+      "confidence": "High",
+      "references": [],
+      "severityOriginal": "Low",
+      "severity": "low",
+      "redactionsApplied": false,
+      "url": "http://127.0.0.1:8080/",
+      "method": "GET",
+      "param": "",
+      "evidence": { "attack": "", "evidence": "", "other": "", "input_vector": "", "message_id": "3" }
+    },
+    {
+      "ruleId": "10096",
+      "producerReference": "10096-1",
+      "title": "Timestamp Disclosure",
+      "description": "A timestamp was disclosed.",
+      "confidence": "Low",
+      "references": [],
+      "severityOriginal": "Informational",
+      "severity": "info",
+      "redactionsApplied": false,
+      "url": "http://127.0.0.1:8080/api?id=1",
+      "method": "GET",
+      "param": "id",
+      "evidence": { "attack": "", "evidence": "1700000000", "other": "", "input_vector": "URL Query String", "message_id": "21" }
+    },
+    {
+      "ruleId": "10202",
+      "producerReference": "10202-1",
+      "title": "Absence of Anti-CSRF Tokens",
+      "description": "No anti-CSRF tokens were found.",
+      "confidence": "Low",
+      "references": ["https://owasp.org/www-community/attacks/csrf", "https://cwe.mitre.org/data/definitions/352.html"],
+      "severityOriginal": "Medium",
+      "severity": "medium",
+      "redactionsApplied": false,
+      "url": "http://127.0.0.1:8080/login",
+      "method": "POST",
+      "param": "",
+      "evidence": { "attack": "", "evidence": "<form action=\"/login\">", "other": "", "input_vector": "", "message_id": "17" }
+    }
+  ]
+}

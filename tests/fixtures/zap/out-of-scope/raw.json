@@ -1,0 +1,7 @@
+{"alerts":[
+  {"pluginId":"10038","alertRef":"10038-1","name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"http://127.0.0.1:8080/ok","method":"GET","param":""},
+  {"pluginId":"10038","alertRef":"10038-1","name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"http://127.0.0.1:9090/x","method":"GET","param":""},
+  {"pluginId":"10038","alertRef":"10038-1","name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"https://127.0.0.1:8080/x","method":"GET","param":""},
+  {"pluginId":"10038","alertRef":"10038-1","name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"http://example.com/","method":"GET","param":""},
+  {"pluginId":"10038","alertRef":"10038-1","name":"Content Security Policy (CSP) Header Not Set","risk":"Low","confidence":"High","url":"http://127.0.0.1:8080@evil.example/","method":"GET","param":""}
+]}
