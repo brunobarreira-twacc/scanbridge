@@ -2,7 +2,7 @@
 
 Phase: **approved for implementation**. No code, project scaffolding or dependencies exist yet. All specifications are approved.
 
-No design decisions are open. Pending verification items V1–V9 are implementation-time checks against real tool versions and do not block implementation.
+No design decisions are open. Items V1, V2 and V4 are verified on Semgrep 1.180.0; V5 is verified for Semgrep's local-rule MVP path. The remaining items are implementation-time checks against real tool versions and do not block implementation.
 
 Source: `pprompts/scanbridge_initial_prompt.md`; decisions were resolved in a design interview (Q1–Q37) and review rounds. Each contract is settled in its owning spec.
 
@@ -38,20 +38,25 @@ Former provisional defaults now settled:
 | Identifier limits and over-limit behavior (P12, part) | Review round 2 | [04](04-finding-schema.md) |
 | ZAP comparisons can be authoritative with origin-only identity; asserted revisions never affect authority | Q17, review round 3 | [07](07-comparison.md) |
 
+## Verified
+
+| ID | Result | Owner |
+|---|---|---|
+| V1 | Semgrep 1.180.0 exit 7 emits parseable JSON with empty `results` and `paths.scanned`. Scanbridge returns failed/exit 3 and persists no raw or normalized report | [05](05-tool-adapters.md) |
+| V2 | Nested list-encoded type `["PartialParsing", [{path,start,end}]]` on Semgrep 1.180.0: exit 0, file kept in `paths.scanned`, partial/exit 4 with findings preserved | [05](05-tool-adapters.md) |
+| V4 | Plain Semgrep 1.180.0 suppresses `// nosemgrep`; `--disable-nosem` retains the finding | [05](05-tool-adapters.md) |
+
 ## Pending verification
 
 Resolve with real tool output for the pinned versions.
 
 | ID | Item | Owner |
 |---|---|---|
-| V1 | Semgrep exit 7 behavior and whether useful JSON is emitted | [05](05-tool-adapters.md) |
-| V2 | Wire format of list-encoded Semgrep error types (`PartialParsing`, …) | [05](05-tool-adapters.md) |
 | V3 | ZAP alerts-API field names, casing and risk/confidence strings (read from source, not live output) | [05](05-tool-adapters.md) |
-| V4 | `--disable-nosem` behavior on the pinned Semgrep version (flag exists in current source) | [05](05-tool-adapters.md) |
-| V5 | Supported Semgrep and ZAP versions to pin for fixtures | [06](06-testing-and-acceptance.md) |
+| V5 | Supported Semgrep and ZAP versions to pin for fixtures. Semgrep 1.180.0 is verified for the local-rule MVP path; ZAP is still open | [06](06-testing-and-acceptance.md) |
 | V6 | Whether files skipped by Semgrep's own timeout threshold appear in `paths.scanned`/`skipped` | [05](05-tool-adapters.md) |
 | V7 | Resolved-rule digest for registry and `auto` modes. Q8 asked for one; until a verified way exists `rules_digest` is null (old P1). Those scans are non-authoritative regardless | [05](05-tool-adapters.md) |
-| V8 | Sufficiency of the built-in value-redaction pattern set | [02](02-architecture.md) |
+| V8 | Sufficiency of the built-in value-redaction pattern set. A source-only synthetic Bearer token passed on Semgrep 1.180.0 (absent from every artifact, `redaction_summary.bearer` 1); this does not establish sufficiency | [02](02-architecture.md) |
 | V9 | Limit values (text, identifier, size, count) against real fixtures | [01](01-scope-and-decisions.md), [04](04-finding-schema.md) |
 
 ## Known limitations

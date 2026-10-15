@@ -29,7 +29,8 @@ const DIAGNOSTIC_ONLY = new Set(['SemgrepWarning']);
 
 type ErrorClass = 'coverage' | 'rule' | 'unmapped' | 'internal' | 'info';
 
-// When a list-encoded type mixes classes, the strongest one decides the entry. [verify] V2: wire format unverified.
+// When a list-encoded type mixes classes, the strongest one decides the entry. Verified on Semgrep 1.180.0 (V2):
+// `["PartialParsing", [{path,start,end}]]`, where the non-string element is ranked as unmapped and coverage wins.
 const RANK: Record<ErrorClass, number> = { info: 0, internal: 1, unmapped: 2, rule: 3, coverage: 4 };
 
 function classifyType(type: string, level: JsonValue | undefined): ErrorClass {

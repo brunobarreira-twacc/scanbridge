@@ -16,7 +16,7 @@ export function scanArgs(ctx: SemgrepScanContext): string[] {
     // Semgrep requires metrics to be on for registry and auto rules, so `--metrics=off` is omitted there.
     ...(rules.mode === 'local' ? ['--metrics=off'] : []),
     '--disable-version-check',
-    // [verify] V4: the flag exists in Semgrep's CLI source; its behavior on the pinned version is not asserted.
+    // Verified on Semgrep 1.180.0 (V4): plain Semgrep suppresses `// nosemgrep`; this flag keeps the finding.
     '--disable-nosem',
     '--timeout',
     String(ctx.ruleTimeoutSeconds),
@@ -50,7 +50,7 @@ export async function scan(ctx: SemgrepScanContext, deps: Deps): Promise<ScanOut
   if (r.stdoutTruncated) {
     return { ...base, outcome: 'failed', diagnostics: [...diagnostics, { code: 'resource_limit_exceeded', level: 'error', tool: 'semgrep', message: 'semgrep output exceeded the raw size limit' }] };
   }
-  // [verify] V1: every non-zero exit, including 7, is failed; no other classification is guessed.
+  // Verified on Semgrep 1.180.0 (V1): exit 7 emits parseable JSON with empty results and paths.scanned, so every non-zero exit is failed.
   if (r.exitCode !== 0) {
     const tail = [...r.stderrTail].slice(-TEXT_FIELD_MAX).join('');
     const failure: RawDiagnostic = { code: 'tool_execution_failed', level: 'error', tool: 'semgrep', message: 'semgrep exited without success' };
