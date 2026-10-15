@@ -1,0 +1,27 @@
+version: 1
+
+redaction:
+  headers: []
+  json_keys: []
+  env_vars: []
+
+tools:
+  semgrep:
+    enabled: true
+    config:
+      rules:
+        - validation/semgrep/rules/invalid-rule.yaml
+      rule_timeout_seconds: 5
+      timeout_seconds: 600
+
+  zap:
+    enabled: false
+    config:
+      api_url_env: SCANBRIDGE_ZAP_API_URL
+      api_key_env: SCANBRIDGE_ZAP_API_KEY
+      target_url_env: SCANBRIDGE_ZAP_TARGET_URL
+      allowed_target_origins: []
+      session_mode: require_clean
+      active: false
+      spider_timeout_seconds: 300
+      passive_timeout_seconds: 120

@@ -1,3 +1,4 @@
 pprompts
 node_modules/
 dist/
+validation/semgrep/output/*

@@ -1,0 +1,2 @@
+rules:
+  - validation/semgrep/rules/invalid-rule.yaml

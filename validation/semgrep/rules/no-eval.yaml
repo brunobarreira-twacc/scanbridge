@@ -1,0 +1,8 @@
+rules:
+  - id: scanbridge.validation.no-eval
+    message: Avoid eval because it may execute untrusted code.
+    severity: ERROR
+    languages:
+      - javascript
+      - typescript
+    pattern: eval(...)
