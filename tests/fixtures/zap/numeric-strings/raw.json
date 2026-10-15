@@ -1,0 +1,4 @@
+{"alerts":[
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"2","description":"No anti-CSRF tokens were found.","url":"http://127.0.0.1:8080/login","method":"POST","param":"0","attack":"","evidence":"","other":"","inputVector":"","messageId":"17","reference":""},
+  {"pluginId":"10096","name":"Timestamp Disclosure","risk":"Informational","confidence":"1","url":"http://127.0.0.1:8080/api?id=1","method":"GET","param":"id","messageId":17}
+]}

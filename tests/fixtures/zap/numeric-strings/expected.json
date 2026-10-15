@@ -1,0 +1,28 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    {
+      "ruleId": "10096",
+      "confidence": "1",
+      "severity": "info",
+      "url": "http://127.0.0.1:8080/api?id=1",
+      "param": "id",
+      "evidence": { "message_id": null }
+    },
+    {
+      "ruleId": "10202",
+      "producerReference": "10202-1",
+      "confidence": "2",
+      "severity": "medium",
+      "url": "http://127.0.0.1:8080/login",
+      "param": "0",
+      "evidence": { "message_id": "17" }
+    }
+  ]
+}

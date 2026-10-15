@@ -1,0 +1,23 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    {
+      "ruleId": "10202",
+      "severity": "medium",
+      "url": "http://127.0.0.1:8080/login",
+      "evidence": { "evidence": "<form action=\"/login\">", "message_id": "17" }
+    },
+    {
+      "ruleId": "10202",
+      "severity": "medium",
+      "url": "http://127.0.0.1:8080/login",
+      "evidence": { "evidence": "<form action=\"/login\">", "message_id": "18" }
+    }
+  ]
+}

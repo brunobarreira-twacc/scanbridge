@@ -1,0 +1,5 @@
+{"alerts":[
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"Low","description":"No anti-CSRF tokens were found.","url":"http://127.0.0.1:8080/login","method":"POST","param":"","attack":"","evidence":"<form action=\"/login\">","other":"","inputVector":"","messageId":"17","reference":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"Low","description":"No anti-CSRF tokens were found.","url":"http://127.0.0.1:8080/login","method":"POST","param":"","attack":"","evidence":"<form action=\"/login\">","other":"","inputVector":"","messageId":"17","reference":""},
+  {"pluginId":"10202","alertRef":"10202-1","name":"Absence of Anti-CSRF Tokens","risk":"Medium","confidence":"Low","description":"No anti-CSRF tokens were found.","url":"http://127.0.0.1:8080/login","method":"POST","param":"","attack":"","evidence":"<form action=\"/login\">","other":"","inputVector":"","messageId":"18","reference":""}
+]}

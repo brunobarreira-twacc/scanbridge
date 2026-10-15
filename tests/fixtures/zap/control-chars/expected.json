@@ -1,0 +1,12 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": ["out_of_scope_target"],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "zap-1",
+  "candidates": [
+    { "ruleId": "10038", "url": "http://127.0.0.1:8080/ok" }
+  ]
+}
