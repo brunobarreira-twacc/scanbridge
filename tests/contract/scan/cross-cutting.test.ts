@@ -3,6 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { semgrepAdapter } from '../../../src/adapters/semgrep/index.js';
+import { sonarqubeAdapter } from '../../../src/adapters/sonarqube/index.js';
 import { zapAdapter } from '../../../src/adapters/zap/index.js';
 import { NodeRunner } from '../../../src/adapters/io/index.js';
 import type { ScanOutput, ToolCatalog } from '../../../src/contracts/adapter.js';
@@ -255,6 +256,7 @@ function fakeCatalogPorts(
         return scan();
       },
     },
+    sonarqube: sonarqubeAdapter,
   };
   return { catalog, runner: new NodeRunner(), http: { request: async () => ({ kind: 'closed' }) }, recorded };
 }
@@ -278,6 +280,7 @@ describe('contexts and ports', () => {
   it('offline ZAP calls neither probe nor scan and never reads the API URL or key variables', async () => {
     const throwing: ToolCatalog = {
       semgrep: semgrepAdapter,
+      sonarqube: sonarqubeAdapter,
       zap: {
         ...zapAdapter,
         probe: async () => {

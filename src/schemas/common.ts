@@ -14,7 +14,7 @@ export const severity = z.enum(SEVERITIES);
 export const scanReason = z.enum(SCAN_REASONS);
 export const diagnosticCode = z.enum(DIAGNOSTIC_CODES);
 
-export const producer = z.enum(['semgrep', 'zap']);
+export const producer = z.enum(['semgrep', 'zap', 'sonarqube']);
 export const contentTrust = z.literal('untrusted_producer_content');
 
 /** Lowercase SHA-256 hex digest. */

@@ -14,7 +14,8 @@
       "type": "string",
       "enum": [
         "semgrep",
-        "zap"
+        "zap",
+        "sonarqube"
       ]
     },
     "producer_version": {

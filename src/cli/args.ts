@@ -18,7 +18,8 @@ export type ScanArgs =
       config: string;
       targetRevision: string | undefined;
       producerVersion: string | undefined;
-    };
+    }
+  | { command: 'scan'; adapter: 'sonarqube'; output: string; config: string };
 export type CliCommand = DoctorArgs | CompareArgs | ScanArgs;
 
 export type ArgsResult = { ok: true; value: CliCommand } | { ok: false; message: string };
@@ -127,7 +128,7 @@ function compareArgs(values: Values): ArgsResult {
 function scanArgs(values: Values): ArgsResult {
   const adapter = values.adapter;
   if (adapter === undefined) return usage('scan requires --adapter');
-  if (adapter !== 'semgrep' && adapter !== 'zap') return usage('--adapter must be semgrep or zap');
+  if (adapter !== 'semgrep' && adapter !== 'zap' && adapter !== 'sonarqube') return usage('--adapter must be semgrep, zap or sonarqube');
   const picked = pickStrings(values, [
     'target',
     'target-url',
@@ -148,6 +149,13 @@ function scanArgs(values: Values): ArgsResult {
       if (v[flag] !== undefined) return usage(`--${flag} is not valid for semgrep`);
     }
     return { ok: true, value: { command: 'scan', adapter, target: v.target, output: v.output, config } };
+  }
+
+  if (adapter === 'sonarqube') {
+    for (const flag of ['target', 'target-url', 'from-report', 'target-revision', 'producer-version'] as const) {
+      if (v[flag] !== undefined) return usage(`--${flag} is not valid for sonarqube`);
+    }
+    return { ok: true, value: { command: 'scan', adapter, output: v.output, config } };
   }
 
   if (v.target !== undefined) return usage('--target is not valid for zap');

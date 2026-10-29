@@ -4,6 +4,8 @@ import type {
   ProbeResult,
   SemgrepProbeContext,
   SemgrepScanContext,
+  SonarQubeProbeContext,
+  SonarQubeScanContext,
   ZapLiveScanContext,
   ZapProbeContext,
 } from '../../../src/contracts/adapter.js';
@@ -19,7 +21,7 @@ const never = (): never => {
 
 export const readyProbe = (version: string): ProbeResult => ({ status: 'ready', version, diagnostics: [] });
 
-export const unavailableProbe = (tool: 'semgrep' | 'zap'): ProbeResult => ({
+export const unavailableProbe = (tool: 'semgrep' | 'zap' | 'sonarqube'): ProbeResult => ({
   status: 'unavailable',
   version: null,
   diagnostics: [{ code: 'tool_unavailable', level: 'error', tool, message: `${tool} did not respond` }],
@@ -27,13 +29,14 @@ export const unavailableProbe = (tool: 'semgrep' | 'zap'): ProbeResult => ({
 
 type Probe<C> = (context: C) => Promise<ProbeResult>;
 
-export type FakePorts = CliPorts & { calls: { semgrep: SemgrepProbeContext[]; zap: ZapProbeContext[] } };
+export type FakePorts = CliPorts & { calls: { semgrep: SemgrepProbeContext[]; zap: ZapProbeContext[]; sonarqube: SonarQubeProbeContext[] } };
 
-/** Catalog whose probes record their contexts. Defaults: both tools ready. */
-export function fakePorts(options: { semgrep?: Probe<SemgrepProbeContext>; zap?: Probe<ZapProbeContext> } = {}): FakePorts {
-  const calls: FakePorts['calls'] = { semgrep: [], zap: [] };
+/** Catalog whose probes record their contexts. Defaults: all tools ready. */
+export function fakePorts(options: { semgrep?: Probe<SemgrepProbeContext>; zap?: Probe<ZapProbeContext>; sonarqube?: Probe<SonarQubeProbeContext> } = {}): FakePorts {
+  const calls: FakePorts['calls'] = { semgrep: [], zap: [], sonarqube: [] };
   const semgrepProbe = options.semgrep ?? (async () => readyProbe('1.2.3'));
   const zapProbe = options.zap ?? (async () => readyProbe('2.10.0'));
+  const sonarqubeProbe = options.sonarqube ?? (async () => readyProbe('10.6.0'));
   return {
     calls,
     catalog: {
@@ -45,14 +48,21 @@ export function fakePorts(options: { semgrep?: Probe<SemgrepProbeContext>; zap?:
         calls.zap.push(context);
         return zapProbe(context);
       }),
+      sonarqube: adapter<SonarQubeProbeContext, SonarQubeScanContext>('sonarqube', async (context) => {
+        calls.sonarqube.push(context);
+        return sonarqubeProbe(context);
+      }),
     },
     runner: { run: never } satisfies Runner,
     http: { request: never } satisfies HttpClient,
   };
 }
 
-function adapter<P extends SemgrepProbeContext | ZapProbeContext, S extends SemgrepScanContext | ZapLiveScanContext>(
-  name: 'semgrep' | 'zap',
+function adapter<
+  P extends SemgrepProbeContext | ZapProbeContext | SonarQubeProbeContext,
+  S extends SemgrepScanContext | ZapLiveScanContext | SonarQubeScanContext,
+>(
+  name: 'semgrep' | 'zap' | 'sonarqube',
   probe: (context: P, deps: Deps) => Promise<ProbeResult>,
 ): Adapter<P, S> {
   return { name, probe, scan: never, parse: never, sourceRefs: never, normalize: never };

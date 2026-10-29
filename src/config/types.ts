@@ -28,6 +28,13 @@ export type Config = {
       spiderTimeoutSeconds: number;
       passiveTimeoutSeconds: number;
     };
+    sonarqube: {
+      enabled: boolean;
+      apiUrlEnv: string;
+      apiKeyEnv: string;
+      projectKeyEnv: string;
+      timeoutSeconds: number;
+    };
   };
 };
 

@@ -14,7 +14,7 @@ export type ScanSummary = {
   status: Completeness;
   exitCode: ScanExit;
   scanId: string;
-  adapter: 'semgrep' | 'zap';
+  adapter: 'semgrep' | 'zap' | 'sonarqube';
   startedAt: Date;
   finishedAt: Date;
   authoritative: boolean;

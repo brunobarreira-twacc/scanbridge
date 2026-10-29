@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "key": "AX123abc",
+      "rule": "javasecurity:S3649",
+      "component": "my-project:src/main/java/App.java",
+      "type": "VULNERABILITY",
+      "message": "SQL injection: change this code.",
+      "impacts": [{"softwareQuality": "SECURITY", "severity": "HIGH"}],
+      "hash": "abc123hash",
+      "textRange": {"startLine": 42, "startOffset": 4, "endLine": 42, "endOffset": 30}
+    },
+    {
+      "key": "BX456def",
+      "rule": "java:S2259",
+      "component": "my-project:src/main/java/Util.java",
+      "type": "BUG",
+      "message": "A NullPointerException could be thrown here.",
+      "impacts": [{"softwareQuality": "RELIABILITY", "severity": "BLOCKER"}],
+      "line": 17
+    }
+  ],
+  "total": 2,
+  "projectKey": "my-project"
+}

@@ -43,6 +43,16 @@ export function zap(
   return ['zap', ruleId, producerReference, method, targetPath, param];
 }
 
+/** Material for a SonarQube finding when the issue hash is available (exact). */
+export function sonarqube(ruleId: string, producerHash: string): FingerprintMaterial {
+  return ['sonarqube', ruleId, producerHash];
+}
+
+/** Material for a SonarQube finding using source location when no hash is available (degraded). */
+export function sonarqubeDegraded(ruleId: string, path: string, startLine: number): FingerprintMaterial {
+  return ['sonarqube', ruleId, path, startLine];
+}
+
 /**
  * Canonical form of a redacted source snippet: BOM removed, NFC, CRLF and CR
  * to LF, every whitespace run collapsed to one space, trimmed.

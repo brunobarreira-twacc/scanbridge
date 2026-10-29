@@ -34,14 +34,27 @@ From the repository root, run:
 ./.pr-review/scanbridge doctor --config .pr-review/tools.yaml
 ```
 
-Continue only when Semgrep is `ready`.
+Continue only when the adapter you intend to use is `ready`.
 
 ## 2. Capture the baseline
+
+Choose one adapter. **Semgrep** (local static analysis):
 
 ```bash
 ./.pr-review/scanbridge scan \
   --adapter semgrep \
   --target src \
+  --output .scanbridge/runs \
+  --config .pr-review/tools.yaml
+```
+
+**SonarQube** (API-pull from a running SonarQube server — requires
+`SONARQUBE_URL`, `SONARQUBE_TOKEN`, and `SONARQUBE_PROJECT` to be set; omit
+`--target`):
+
+```bash
+./.pr-review/scanbridge scan \
+  --adapter sonarqube \
   --output .scanbridge/runs \
   --config .pr-review/tools.yaml
 ```
@@ -99,8 +112,8 @@ Review the patch against that finding and its focused tests. Reject unrelated
 changes, suppressions such as `nosemgrep`, scanner-rule edits, configuration
 changes, report edits, or test weakening. Run the focused tests.
 
-Run the same Scanbridge command from step 2 and preserve the new normalized
-path as `NEXT_REPORT`. Compare the current state with the candidate state:
+Run the same Scanbridge scan command from step 2 and preserve the new
+normalized path as `NEXT_REPORT`. Compare the current state with the candidate state:
 
 ```bash
 ./.pr-review/scanbridge compare \

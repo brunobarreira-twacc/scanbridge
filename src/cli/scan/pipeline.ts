@@ -41,7 +41,7 @@ class Stop extends Error {
   }
 }
 
-const diagnostic = (code: RawDiagnostic['code'], level: RawDiagnostic['level'], message: string, tool?: 'semgrep' | 'zap'): RawDiagnostic =>
+const diagnostic = (code: RawDiagnostic['code'], level: RawDiagnostic['level'], message: string, tool?: 'semgrep' | 'zap' | 'sonarqube'): RawDiagnostic =>
   tool === undefined ? { code, level, message } : { code, level, tool, message };
 
 /**
@@ -90,7 +90,7 @@ async function execute(
   diagnostics: RawDiagnostic[],
 ): Promise<PipelineResult> {
   const tool = plan.adapter;
-  const adapter: Adapter<never, never> = (tool === 'semgrep' ? ports.catalog.semgrep : ports.catalog.zap) as unknown as Adapter<never, never>;
+  const adapter: Adapter<never, never> = (tool === 'semgrep' ? ports.catalog.semgrep : tool === 'zap' ? ports.catalog.zap : ports.catalog.sonarqube) as unknown as Adapter<never, never>;
   const adapterDeps: Deps = { runner: ports.runner, http: ports.http, clock: deps.clock };
   const semgrep = plan.semgrep;
 
@@ -233,7 +233,7 @@ async function execute(
 }
 
 async function probe(plan: Plan, ports: CliPorts, deps: Deps) {
-  const unavailable = (tool: 'semgrep' | 'zap') => ({
+  const unavailable = (tool: 'semgrep' | 'zap' | 'sonarqube') => ({
     status: 'unavailable' as const,
     version: null,
     diagnostics: [diagnostic('tool_unavailable', 'error', `${tool} probe did not complete`, tool)],
@@ -241,6 +241,7 @@ async function probe(plan: Plan, ports: CliPorts, deps: Deps) {
   try {
     if (plan.semgrep) return await ports.catalog.semgrep.probe({ producer: 'semgrep' }, deps);
     if (plan.live) return await ports.catalog.zap.probe(plan.live.probe, deps);
+    if (plan.sonarqube) return await ports.catalog.sonarqube.probe(plan.sonarqube.probe, deps);
   } catch {
     return unavailable(plan.adapter);
   }
@@ -252,6 +253,7 @@ async function acquire(plan: Plan, ports: CliPorts, deps: Deps): Promise<ScanOut
   const failed = (d: RawDiagnostic): ScanOutput => ({ outcome: 'failed', raw: null, diagnostics: [d], coverageLoss: [], reasons: [] });
   if (plan.semgrep) return ports.catalog.semgrep.scan(plan.semgrep.scan, deps);
   if (plan.live) return ports.catalog.zap.scan(plan.live.scan, deps);
+  if (plan.sonarqube) return ports.catalog.sonarqube.scan(plan.sonarqube.scan, deps);
   if (!plan.offline) return failed(diagnostic('tool_execution_failed', 'error', 'No scan mode is available', plan.adapter));
   const read = await readOfflineReport(plan.offline.reportPath);
   if (!read.ok) {

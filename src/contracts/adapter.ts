@@ -10,6 +10,7 @@ export type RuleSource =
 // Probe contexts carry only what a readiness check needs; scan contexts carry what a scan needs.
 export type SemgrepProbeContext = { producer: 'semgrep' };
 export type ZapProbeContext = { producer: 'zap'; apiUrl: string; apiKey: SensitiveString };
+export type SonarQubeProbeContext = { producer: 'sonarqube'; apiUrl: string; apiKey: SensitiveString; projectKey: string };
 
 export type SemgrepScanContext = {
   producer: 'semgrep';
@@ -31,6 +32,14 @@ export type ZapLiveScanContext = {
   sessionMode: 'require_clean' | 'reset';
   spiderTimeoutSeconds: number;
   passiveTimeoutSeconds: number;
+};
+
+export type SonarQubeScanContext = {
+  producer: 'sonarqube';
+  apiUrl: string;
+  apiKey: SensitiveString;
+  projectKey: string;
+  timeoutSeconds: number;
 };
 // Offline ZAP has no probe or scan context: the orchestrator calls neither `probe` nor `scan`.
 
@@ -79,7 +88,7 @@ export type NormalizeContext = {
 export type SourceRef = { key: string; path: string; startLine: number; endLine: number };
 
 export type Candidate = {
-  producer: 'semgrep' | 'zap';
+  producer: 'semgrep' | 'zap' | 'sonarqube';
   ruleId: string;
   producerReference: string | null;
   producerFingerprint: string | null;
@@ -113,10 +122,10 @@ export type NormalizeOutput = {
 };
 
 export interface Adapter<
-  P extends SemgrepProbeContext | ZapProbeContext,
-  S extends SemgrepScanContext | ZapLiveScanContext,
+  P extends SemgrepProbeContext | ZapProbeContext | SonarQubeProbeContext,
+  S extends SemgrepScanContext | ZapLiveScanContext | SonarQubeScanContext,
 > {
-  name: 'semgrep' | 'zap';
+  name: 'semgrep' | 'zap' | 'sonarqube';
   probe(c: P, d: Deps): Promise<ProbeResult>;
   scan(c: S, d: Deps): Promise<ScanOutput>;
   parse(raw: Uint8Array): ParseResult;
@@ -127,4 +136,5 @@ export interface Adapter<
 export type ToolCatalog = {
   semgrep: Adapter<SemgrepProbeContext, SemgrepScanContext>;
   zap: Adapter<ZapProbeContext, ZapLiveScanContext>;
+  sonarqube: Adapter<SonarQubeProbeContext, SonarQubeScanContext>;
 };

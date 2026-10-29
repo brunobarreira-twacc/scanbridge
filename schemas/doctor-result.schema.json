@@ -22,7 +22,8 @@
             "type": "string",
             "enum": [
               "semgrep",
-              "zap"
+              "zap",
+              "sonarqube"
             ]
           },
           "status": {
@@ -76,7 +77,8 @@
                     "zap_session_not_clean",
                     "zap_unreachable_or_rejected",
                     "bad_api_key",
-                    "target_url_overridden"
+                    "target_url_overridden",
+                    "sonarqube_unreachable_or_rejected"
                   ]
                 },
                 "message": {

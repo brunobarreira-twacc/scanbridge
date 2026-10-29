@@ -18,13 +18,13 @@ export function rulesDigest(ruleFiles: readonly RuleFile[] | null): string | nul
  * Environment values and the API key never enter this digest.
  */
 export function configurationDigest(input: {
-  tool: 'semgrep' | 'zap';
+  tool: 'semgrep' | 'zap' | 'sonarqube';
   config: Config;
   redactionPolicyInput: PolicyInput;
   ruleFiles: readonly RuleFile[];
 }): string {
   const { tool, config, redactionPolicyInput, ruleFiles } = input;
-  const section = tool === 'semgrep' ? semgrepSection(config) : zapSection(config);
+  const section = tool === 'semgrep' ? semgrepSection(config) : tool === 'zap' ? zapSection(config) : sonarqubeSection(config);
   const redaction = {
     builtin: BUILTIN_REDACTION_VERSION,
     headers: [...redactionPolicyInput.headers],
@@ -68,6 +68,17 @@ function zapSection(config: Config): CanonicalJson {
     active: zap.active,
     spider_timeout_seconds: zap.spiderTimeoutSeconds,
     passive_timeout_seconds: zap.passiveTimeoutSeconds,
+  };
+}
+
+function sonarqubeSection(config: Config): CanonicalJson {
+  const sq = config.tools.sonarqube;
+  return {
+    enabled: sq.enabled,
+    api_url_env: sq.apiUrlEnv,
+    api_key_env: sq.apiKeyEnv,
+    project_key_env: sq.projectKeyEnv,
+    timeout_seconds: sq.timeoutSeconds,
   };
 }
 

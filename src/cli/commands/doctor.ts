@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { loadConfig, resolveZapDoctorInputs } from '../../config/index.js';
+import { loadConfig, resolveSonarQubeInputs, resolveZapDoctorInputs } from '../../config/index.js';
 import type { Config, Env } from '../../config/types.js';
 import type { Deps, ProbeResult } from '../../contracts/adapter.js';
 import type { EnvReader } from '../../contracts/ports.js';
@@ -18,7 +18,7 @@ export async function runDoctor(args: DoctorArgs, deps: CliDeps): Promise<Outcom
     return { exitCode: ERROR_EXIT_CODES.invalid_configuration, output: errorEnvelope('invalid_configuration', 'configuration is invalid') };
   }
 
-  const tools = [await semgrepTool(loaded.config, deps), await zapTool(loaded.config, deps)];
+  const tools = [await semgrepTool(loaded.config, deps), await zapTool(loaded.config, deps), await sonarQubeTool(loaded.config, deps)];
   const ok = tools.every((tool) => tool.status === 'ready' || tool.status === 'skipped');
   return {
     exitCode: doctorExitCode(ok),
@@ -57,20 +57,37 @@ async function zapTool(config: Config, deps: CliDeps): Promise<DoctorToolReport>
   return { name: 'zap', ...reportFields(result), ...keyFields };
 }
 
-function skipped(name: 'semgrep' | 'zap'): DoctorToolReport {
+async function sonarQubeTool(config: Config, deps: CliDeps): Promise<DoctorToolReport> {
+  if (!config.tools.sonarqube.enabled) return skipped('sonarqube');
+
+  const inputs = resolveSonarQubeInputs({ config, env: envView(deps.env) });
+  if (inputs.problems.length > 0 || inputs.apiUrl === null || inputs.apiKey === null || inputs.projectKey === null) {
+    const problems = inputs.problems.map((problem) => ({ code: 'tool_unavailable' as const, message: problem.message }));
+    return { name: 'sonarqube', status: 'unavailable', version: null, problems };
+  }
+
+  const ports = deps.ports;
+  if (ports === undefined) return { name: 'sonarqube', status: 'unavailable', version: null, problems: [unwiredProblem('sonarqube')] };
+  const result = await probeSafely('sonarqube', () =>
+    ports.catalog.sonarqube.probe({ producer: 'sonarqube', apiUrl: inputs.apiUrl!, apiKey: inputs.apiKey!, projectKey: inputs.projectKey! }, adapterDeps(ports, deps)),
+  );
+  return { name: 'sonarqube', ...reportFields(result) };
+}
+
+function skipped(name: 'semgrep' | 'zap' | 'sonarqube'): DoctorToolReport {
   return { name, status: 'skipped', version: null, problems: [] };
 }
 
-function unwired(name: 'semgrep' | 'zap'): DoctorToolReport {
+function unwired(name: 'semgrep' | 'zap' | 'sonarqube'): DoctorToolReport {
   return { name, status: 'unavailable', version: null, problems: [unwiredProblem(name)] };
 }
 
-function unwiredProblem(name: 'semgrep' | 'zap'): { code: 'tool_unavailable'; message: string } {
+function unwiredProblem(name: 'semgrep' | 'zap' | 'sonarqube'): { code: 'tool_unavailable'; message: string } {
   return { code: 'tool_unavailable', message: `${name} adapter is not wired into this build` };
 }
 
 /** A probe that throws counts as not ready; the thrown value is never copied into the output. */
-async function probeSafely(name: 'semgrep' | 'zap', probe: () => Promise<ProbeResult>): Promise<ProbeResult> {
+async function probeSafely(name: 'semgrep' | 'zap' | 'sonarqube', probe: () => Promise<ProbeResult>): Promise<ProbeResult> {
   try {
     return await probe();
   } catch {

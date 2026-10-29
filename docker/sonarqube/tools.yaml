@@ -1,0 +1,23 @@
+# scanbridge config for local SonarQube testing.
+# Place (or symlink) this file at .pr-review/tools.yaml in the project root you
+# want to scan, or pass it explicitly with --config docker/sonarqube/tools.yaml.
+version: 1
+tools:
+  semgrep:
+    enabled: false
+    config:
+      use_auto: true
+  zap:
+    enabled: false
+    config:
+      api_url_env: SCANBRIDGE_ZAP_API_URL
+      api_key_env: SCANBRIDGE_ZAP_API_KEY
+      target_url_env: SCANBRIDGE_ZAP_TARGET_URL
+      allowed_target_origins: []
+  sonarqube:
+    enabled: true
+    config:
+      api_url_env: SONARQUBE_URL
+      api_key_env: SONARQUBE_TOKEN
+      project_key_env: SONARQUBE_PROJECT
+      timeout_seconds: 90

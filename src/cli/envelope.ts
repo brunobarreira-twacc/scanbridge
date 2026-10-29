@@ -23,7 +23,7 @@ export type DoctorReport = {
 };
 
 export type DoctorToolReport = {
-  name: 'semgrep' | 'zap';
+  name: 'semgrep' | 'zap' | 'sonarqube';
   status: 'ready' | 'unavailable' | 'skipped';
   version: string | null;
   api_key?: 'present' | 'missing';

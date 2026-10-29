@@ -11,6 +11,9 @@ import {
   SEMGREP_RULE_TIMEOUT_DEFAULT,
   SEMGREP_RULE_TIMEOUT_MAX,
   SEMGREP_RULE_TIMEOUT_MIN,
+  SONARQUBE_TIMEOUT_DEFAULT,
+  SONARQUBE_TIMEOUT_MAX,
+  SONARQUBE_TIMEOUT_MIN,
   ZAP_DEADLINE_MAX,
   ZAP_DEADLINE_MIN,
   ZAP_PASSIVE_TIMEOUT_DEFAULT,
@@ -49,6 +52,14 @@ const semgrepConfigSchema = z.strictObject({
   timeout_seconds: seconds(SEMGREP_PROCESS_TIMEOUT_MIN, SEMGREP_PROCESS_TIMEOUT_MAX, SEMGREP_PROCESS_TIMEOUT_DEFAULT),
 });
 
+// Deliberately has no field for URLs or tokens: their values never belong in the file.
+const sonarqubeConfigSchema = z.strictObject({
+  api_url_env: envName,
+  api_key_env: envName,
+  project_key_env: envName,
+  timeout_seconds: seconds(SONARQUBE_TIMEOUT_MIN, SONARQUBE_TIMEOUT_MAX, SONARQUBE_TIMEOUT_DEFAULT),
+});
+
 // Deliberately has no field for the target URL or the API URL: their values never belong in the file.
 const zapConfigSchema = z.strictObject({
   api_url_env: envName,
@@ -67,6 +78,7 @@ const rootSchema = z.strictObject({
   tools: z.strictObject({
     semgrep: z.strictObject({ enabled: z.boolean(), config: semgrepConfigSchema }),
     zap: z.strictObject({ enabled: z.boolean(), config: zapConfigSchema }),
+    sonarqube: z.strictObject({ enabled: z.boolean(), config: sonarqubeConfigSchema }),
   }),
 });
 
@@ -166,6 +178,7 @@ export function loadConfig(path: string, options: { root: string; env: Env }): L
 
   if (errors.length > 0) return fail(errors);
 
+  const sonarqube = data.tools.sonarqube.config;
   const config: Config = {
     version: 1,
     redaction,
@@ -186,6 +199,13 @@ export function loadConfig(path: string, options: { root: string; env: Env }): L
         active: zap.active,
         spiderTimeoutSeconds: zap.spider_timeout_seconds,
         passiveTimeoutSeconds: zap.passive_timeout_seconds,
+      },
+      sonarqube: {
+        enabled: data.tools.sonarqube.enabled,
+        apiUrlEnv: sonarqube.api_url_env,
+        apiKeyEnv: sonarqube.api_key_env,
+        projectKeyEnv: sonarqube.project_key_env,
+        timeoutSeconds: sonarqube.timeout_seconds,
       },
     },
   };

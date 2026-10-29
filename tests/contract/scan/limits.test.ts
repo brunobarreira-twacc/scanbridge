@@ -79,6 +79,10 @@ describe('V9 limits live only in src/contracts/limits.ts', () => {
       ['src/adapters/zap/probe.ts', [1024]],
       // HTTP status range check (`< 300`), not a timeout.
       ['src/adapters/zap/scan.ts', [300]],
+      // 64 * 1024 for probe buffer; HTTP status range check.
+      ['src/adapters/sonarqube/probe.ts', [1024, 300]],
+      // HTTP status range check (`< 300`), not a timeout.
+      ['src/adapters/sonarqube/scan.ts', [300]],
     ]);
     const found: string[] = [];
     for (const file of walk(join(ROOT, 'src'))) {
@@ -103,7 +107,7 @@ describe('V9 limits live only in src/contracts/limits.ts', () => {
 });
 
 describe('V5 fixture provenance', () => {
-  for (const tool of ['semgrep', 'zap'] as const) {
+  for (const tool of ['semgrep', 'zap', 'sonarqube'] as const) {
     const base = join(ROOT, 'tests', 'fixtures', tool);
     const cases = existsSync(base) ? readdirSync(base).filter((n) => statSync(join(base, n)).isDirectory()) : [];
     it(`${tool}: fixture cases exist`, () => {
@@ -119,7 +123,7 @@ describe('V5 fixture provenance', () => {
         const value = line.slice('Producer version:'.length).trim();
         assert.ok(value !== '', 'empty producer version');
         if (/^unknown/i.test(value)) {
-          assert.match(value, /^unknown — verify against real (Semgrep|ZAP)$/i);
+          assert.match(value, /^unknown — verify against real (Semgrep|ZAP|SonarQube)$/i);
           assert.ok(new RegExp(`verify against real ${tool}`, 'i').test(text), `missing "verify against real ${tool}" marker`);
         }
       });

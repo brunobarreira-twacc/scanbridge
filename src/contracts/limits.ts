@@ -40,3 +40,7 @@ export const ZAP_DEADLINE_MIN = 1;
 export const ZAP_DEADLINE_MAX = 3_600;
 export const ZAP_SPIDER_TIMEOUT_DEFAULT = 300;
 export const ZAP_PASSIVE_TIMEOUT_DEFAULT = 120;
+export const SONARQUBE_TIMEOUT_MIN = 10;
+export const SONARQUBE_TIMEOUT_MAX = 300;
+export const SONARQUBE_TIMEOUT_DEFAULT = 60;
+export const SONARQUBE_PAGE_SIZE = 500;

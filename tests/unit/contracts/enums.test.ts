@@ -15,12 +15,13 @@ import {
   SEMGREP_MAPPING_VERSION,
   SEVERITIES,
   SEVERITY_RANK,
+  SONARQUBE_MAPPING_VERSION,
   ZAP_MAPPING_VERSION,
 } from '../../../src/contracts/enums.js';
 
-test('diagnostic codes: 20, exact members', () => {
-  assert.equal(DIAGNOSTIC_CODES.length, 20);
-  assert.equal(new Set(DIAGNOSTIC_CODES).size, 20);
+test('diagnostic codes: 21, exact members', () => {
+  assert.equal(DIAGNOSTIC_CODES.length, 21);
+  assert.equal(new Set(DIAGNOSTIC_CODES).size, 21);
   assert.deepEqual(
     [...DIAGNOSTIC_CODES].sort(),
     [
@@ -28,7 +29,7 @@ test('diagnostic codes: 20, exact members', () => {
       'unmapped_error_type', 'unmapped_severity', 'non_deterministic_rules', 'out_of_scope_target', 'redaction_failed',
       'malformed_report', 'target_identity_unavailable', 'target_changed_during_scan', 'fingerprint_degraded',
       'no_files_scanned', 'no_urls_discovered', 'zap_session_not_clean', 'zap_unreachable_or_rejected', 'bad_api_key',
-      'target_url_overridden',
+      'target_url_overridden', 'sonarqube_unreachable_or_rejected',
     ].sort(),
   );
 });
@@ -68,5 +69,6 @@ test('exit codes 0-5 and versions', () => {
   assert.equal(FINGERPRINT_VERSION, 'v1');
   assert.equal(SEMGREP_MAPPING_VERSION, 'semgrep-1');
   assert.equal(ZAP_MAPPING_VERSION, 'zap-1');
+  assert.equal(SONARQUBE_MAPPING_VERSION, 'sonarqube-1');
   assert.equal(BUILTIN_REDACTION_VERSION, '1');
 });

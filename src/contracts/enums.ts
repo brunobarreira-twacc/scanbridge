@@ -21,6 +21,7 @@ export const DIAGNOSTIC_CODES = [
   'zap_unreachable_or_rejected',
   'bad_api_key',
   'target_url_overridden',
+  'sonarqube_unreachable_or_rejected',
 ] as const;
 export type DiagnosticCode = (typeof DIAGNOSTIC_CODES)[number];
 
@@ -100,4 +101,5 @@ export const SCHEMA_VERSION = '1';
 export const FINGERPRINT_VERSION = 'v1';
 export const SEMGREP_MAPPING_VERSION = 'semgrep-1';
 export const ZAP_MAPPING_VERSION = 'zap-1';
+export const SONARQUBE_MAPPING_VERSION = 'sonarqube-1';
 export const BUILTIN_REDACTION_VERSION = '1';

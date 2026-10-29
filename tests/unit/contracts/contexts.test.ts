@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import type {
   SemgrepProbeContext,
   SemgrepScanContext,
+  SonarQubeProbeContext,
   ToolCatalog,
   ZapLiveScanContext,
   ZapProbeContext,
@@ -50,9 +51,11 @@ test('probe and scan contexts are separate types', () => {
 });
 
 test('catalog wires probe and scan contexts per tool', () => {
+  const sonarqubeCtx: SonarQubeProbeContext = { producer: 'sonarqube', apiUrl: 'http://localhost:9000', apiKey: key, projectKey: 'my-project' };
   const check = (t: ToolCatalog) => {
     void t.semgrep.probe({ producer: 'semgrep' }, undefined as never);
     void t.zap.probe({ producer: 'zap', apiUrl: 'u', apiKey: key }, undefined as never);
+    void t.sonarqube.probe(sonarqubeCtx, undefined as never);
   };
   assert.equal(typeof check, 'function');
 });

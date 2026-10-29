@@ -8,7 +8,7 @@ import { errorEnvelope } from '../envelope.js';
 import { ERROR_EXIT_CODES } from '../exit.js';
 import type { CliDeps } from '../main.js';
 import { ReportStore, ScanDirectoryExistsError } from '../store/report-store.js';
-import { configDigestFor, prepareSemgrep, prepareZap, type Base, type Plan, type Prepared } from './inputs.js';
+import { configDigestFor, prepareSemgrep, prepareSonarQube, prepareZap, type Base, type Plan, type Prepared } from './inputs.js';
 import { envView } from './env.js';
 import { runPipeline } from './pipeline.js';
 import { scanResultText, type Exclusion, type ScanSummary } from './result.js';
@@ -44,7 +44,10 @@ export async function runScan(args: ScanArgs, deps: CliDeps): Promise<Outcome> {
     configurationDigest: configDigestFor(config, args.adapter),
     hasPorts: deps.ports !== undefined,
   };
-  const prepared: Prepared = args.adapter === 'semgrep' ? await prepareSemgrep(args, base) : await prepareZap(args, base);
+  const prepared: Prepared =
+    args.adapter === 'semgrep' ? await prepareSemgrep(args, base) :
+    args.adapter === 'sonarqube' ? await prepareSonarQube(args, base) :
+    await prepareZap(args, base);
 
   switch (prepared.kind) {
     case 'error':
@@ -62,7 +65,7 @@ function usageOutcome(code: Parameters<typeof errorEnvelope>[0], message: string
 
 /** Failures before the scan directory exists: the envelope is printed with `artifacts` null. */
 function preflightOutcome(
-  adapter: 'semgrep' | 'zap',
+  adapter: 'semgrep' | 'zap' | 'sonarqube',
   base: Base,
   policy: Policy,
   scanId: string,

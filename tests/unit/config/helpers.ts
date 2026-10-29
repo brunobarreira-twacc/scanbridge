@@ -57,6 +57,14 @@ export const BASE_DOC: Doc = {
         allowed_target_origins: ['http://127.0.0.1:8080'],
       },
     },
+    sonarqube: {
+      enabled: false,
+      config: {
+        api_url_env: 'SONARQUBE_URL',
+        api_key_env: 'SONARQUBE_TOKEN',
+        project_key_env: 'SONARQUBE_PROJECT',
+      },
+    },
   },
 };
 

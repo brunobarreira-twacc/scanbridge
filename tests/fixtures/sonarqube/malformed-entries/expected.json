@@ -1,0 +1,19 @@
+{
+  "parse": "ok",
+  "completeness": "partial",
+  "unusableCount": 3,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "sonarqube-1",
+  "candidates": [
+    {
+      "ruleId": "java:S2259",
+      "producerReference": "VALID001",
+      "title": "A valid issue.",
+      "severityOriginal": "MEDIUM",
+      "severity": "medium",
+      "redactionsApplied": false
+    }
+  ]
+}

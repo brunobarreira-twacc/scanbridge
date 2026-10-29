@@ -18,6 +18,12 @@ tools:
       api_key_env: SCANBRIDGE_ZAP_API_KEY
       target_url_env: SCANBRIDGE_ZAP_TARGET_URL
       allowed_target_origins: ["http://127.0.0.1:8080"]
+  sonarqube:
+    enabled: false
+    config:
+      api_url_env: SONARQUBE_URL
+      api_key_env: SONARQUBE_TOKEN
+      project_key_env: SONARQUBE_PROJECT
 `;
 
 /** Scratch directories are removed by the cleanup hook in `scratchRepo`. */
@@ -126,7 +132,7 @@ describe('doctor: semgrep and disabled tools', () => {
     assert.equal(result.exitCode, 0);
     assert.deepEqual(
       result.json.tools.map((tool: { status: string }) => tool.status),
-      ['skipped', 'skipped'],
+      ['skipped', 'skipped', 'skipped'],
     );
     assert.equal(result.ports.calls.semgrep.length + result.ports.calls.zap.length, 0);
   });

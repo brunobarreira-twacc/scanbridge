@@ -1,8 +1,8 @@
 import { realpath, stat } from 'node:fs/promises';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
-import { configurationDigest, resolveZapLiveInputs, resolveZapOfflineInputs, rulesDigest } from '../../config/index.js';
+import { configurationDigest, resolveSonarQubeInputs, resolveZapLiveInputs, resolveZapOfflineInputs, rulesDigest } from '../../config/index.js';
 import type { Config, Env } from '../../config/types.js';
-import type { RawDiagnostic, SemgrepScanContext, ZapLiveScanContext, ZapProbeContext } from '../../contracts/adapter.js';
+import type { RawDiagnostic, SemgrepScanContext, SonarQubeProbeContext, SonarQubeScanContext, ZapLiveScanContext, ZapProbeContext } from '../../contracts/adapter.js';
 import type { ErrorCode } from '../../contracts/enums.js';
 import type { EnvReader } from '../../contracts/ports.js';
 import { canonicalJson, normalizeUrl, sha256Hex } from '../../core/fingerprints/index.js';
@@ -24,8 +24,8 @@ export type Base = {
 };
 
 export type Plan = {
-  adapter: 'semgrep' | 'zap';
-  mode: 'semgrep' | 'live' | 'offline';
+  adapter: 'semgrep' | 'zap' | 'sonarqube';
+  mode: 'semgrep' | 'live' | 'offline' | 'sonarqube';
   scanId: string;
   startedAt: Date;
   policy: Policy;
@@ -37,6 +37,7 @@ export type Plan = {
   semgrep?: { scan: SemgrepScanContext; excludeRel: string[] };
   live?: { probe: ZapProbeContext; scan: ZapLiveScanContext };
   offline?: { reportPath: string; producerVersion: string | null };
+  sonarqube?: { probe: SonarQubeProbeContext; scan: SonarQubeScanContext };
   targetOrigin: string | null;
   assertedRevision: string | null;
 };
@@ -49,8 +50,9 @@ export type Prepared =
 
 type SemgrepArgs = Extract<ScanArgs, { adapter: 'semgrep' }>;
 type ZapArgs = Extract<ScanArgs, { adapter: 'zap' }>;
+type SonarQubeArgs = Extract<ScanArgs, { adapter: 'sonarqube' }>;
 
-export function configDigestFor(config: Config, tool: 'semgrep' | 'zap'): string {
+export function configDigestFor(config: Config, tool: 'semgrep' | 'zap' | 'sonarqube'): string {
   const rules = config.tools.semgrep.rules;
   return configurationDigest({
     tool,
@@ -64,7 +66,7 @@ function scanIdFor(base: Base, targetKey: string | null): string {
   return makeScanId(base.startedAt, sha256Hex(canonicalJson([base.configurationDigest, targetKey])));
 }
 
-const unavailable = (tool: 'semgrep' | 'zap', message: string): RawDiagnostic => ({
+const unavailable = (tool: 'semgrep' | 'zap' | 'sonarqube', message: string): RawDiagnostic => ({
   code: 'tool_unavailable',
   level: 'error',
   tool,
@@ -227,6 +229,46 @@ function outputMessage(error: 'not_a_directory' | 'equals_target' | 'symlink_esc
     case 'symlink_escape':
       return '--output resolves outside the repository root through a symlink';
   }
+}
+
+export async function prepareSonarQube(args: SonarQubeArgs, base: Base): Promise<Prepared> {
+  const resolved = resolveSonarQubeInputs({ config: base.config, env: base.env });
+  if (resolved.problems.length > 0) {
+    return preflight(base, null, resolved.problems.map((p) => unavailable('sonarqube', p.message)));
+  }
+  if (resolved.apiUrl === null || resolved.apiKey === null || resolved.projectKey === null) {
+    return preflight(base, null, [unavailable('sonarqube', 'SonarQube API inputs are not available')]);
+  }
+  if (!base.hasPorts) {
+    return preflight(base, null, [unavailable('sonarqube', 'sonarqube adapter is not wired into this build')]);
+  }
+
+  const output = await validateOutputDir({ root: base.cwd, output: args.output });
+  if (!output.ok) return usage(outputMessage(output.error));
+
+  const scanId = scanIdFor(base, resolved.projectKey);
+  const sq = base.config.tools.sonarqube;
+  return {
+    kind: 'plan',
+    plan: {
+      adapter: 'sonarqube',
+      mode: 'sonarqube',
+      scanId,
+      startedAt: base.startedAt,
+      policy: base.policy,
+      configurationDigest: base.configurationDigest,
+      rulesDigest: null,
+      outputBase: output.outputBase,
+      exclusions: [],
+      preDiagnostics: [],
+      sonarqube: {
+        probe: { producer: 'sonarqube', apiUrl: resolved.apiUrl, apiKey: resolved.apiKey, projectKey: resolved.projectKey },
+        scan: { producer: 'sonarqube', apiUrl: resolved.apiUrl, apiKey: resolved.apiKey, projectKey: resolved.projectKey, timeoutSeconds: sq.timeoutSeconds },
+      },
+      targetOrigin: null,
+      assertedRevision: null,
+    },
+  };
 }
 
 /** The target as a root-relative POSIX path, or null unless it is an existing directory inside the real root. */

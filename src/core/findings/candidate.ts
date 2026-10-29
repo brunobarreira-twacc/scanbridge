@@ -9,6 +9,8 @@ import {
   semgrepDegraded,
   semgrepExact,
   sha256Hex,
+  sonarqube,
+  sonarqubeDegraded,
   zap,
   type FingerprintMaterial,
   type GuardedIdentity,
@@ -51,7 +53,12 @@ interface ResolvedFingerprint {
 
 export function resolveCandidate(candidate: Candidate): ResolvedCandidate {
   const issues: CandidateIssues = { oversized: 0, invalid: 0, unreadableSource: false };
-  const resolved = candidate.producer === 'semgrep' ? resolveSemgrep(candidate, issues) : resolveZap(candidate, issues);
+  const resolved =
+    candidate.producer === 'semgrep'
+      ? resolveSemgrep(candidate, issues)
+      : candidate.producer === 'sonarqube'
+        ? resolveSonarQube(candidate, issues)
+        : resolveZap(candidate, issues);
   return {
     ...resolved,
     producerFingerprint: candidate.producerFingerprint === null ? null : plainText(candidate.producerFingerprint),
@@ -106,6 +113,51 @@ function resolveSemgrep(candidate: Candidate, issues: CandidateIssues): Resolved
         end_line: endLine,
         end_col: endCol,
       },
+      evidence: buildEvidence(candidate),
+    },
+  };
+}
+
+function resolveSonarQube(candidate: Candidate, issues: CandidateIssues): ResolvedFingerprint {
+  const rule = guard(candidate.ruleId, 'rule_id', issues);
+  const reference = resolveProducerReference(candidate.producerReference, issues);
+  const source = candidate.location.source;
+  const guardedPath = source ? guard(source.path, 'path', issues) : undefined;
+
+  let material: FingerprintMaterial;
+  let degraded: boolean;
+
+  if (candidate.producerFingerprint !== null && candidate.producerFingerprint !== '') {
+    const fp = guard(candidate.producerFingerprint, 'producer_reference', issues);
+    material = sonarqube(rule.value, fp.value);
+    degraded = rule.degraded || fp.degraded;
+  } else if (guardedPath) {
+    material = sonarqubeDegraded(rule.value, guardedPath.value, source!.startLine);
+    degraded = true;
+  } else {
+    material = sonarqube(rule.value, reference.material);
+    degraded = true;
+  }
+
+  return {
+    fingerprint: fingerprintFromMaterial(material),
+    degraded,
+    ruleId: rule.value,
+    producerReference: reference.value,
+    occurrence: {
+      severity: candidate.severity,
+      severity_original: plainText(candidate.severityOriginal),
+      ...(source && guardedPath
+        ? {
+            source_location: {
+              path: guardedPath.value,
+              start_line: source.startLine,
+              start_col: source.startCol,
+              end_line: source.endLine,
+              end_col: source.endCol,
+            },
+          }
+        : {}),
       evidence: buildEvidence(candidate),
     },
   };

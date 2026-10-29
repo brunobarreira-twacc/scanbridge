@@ -21,6 +21,12 @@ tools:
       api_key_env: SCANBRIDGE_ZAP_API_KEY
       target_url_env: SCANBRIDGE_ZAP_TARGET_URL
       allowed_target_origins: ["http://127.0.0.1:8080"]
+  sonarqube:
+    enabled: false
+    config:
+      api_url_env: SONARQUBE_URL
+      api_key_env: SONARQUBE_TOKEN
+      project_key_env: SONARQUBE_PROJECT
 `;
 
 const scratchDirs: string[] = [];
@@ -52,7 +58,7 @@ describe('doctor through main', () => {
     const report = assertShape(run.stdout.text, run.stderr.text) as { ok: boolean; command: string; tools: { status: string }[] };
     assert.equal(report.command, 'doctor');
     assert.equal(report.ok, true);
-    assert.deepEqual(report.tools.map((tool) => tool.status), ['ready', 'ready']);
+    assert.deepEqual(report.tools.map((tool) => tool.status), ['ready', 'ready', 'skipped']);
   });
 
   it('exits 2 when a tool is unavailable', async () => {

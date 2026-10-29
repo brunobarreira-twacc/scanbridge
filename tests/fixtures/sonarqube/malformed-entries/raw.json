@@ -1,0 +1,17 @@
+{
+  "issues": [
+    {
+      "key": "VALID001",
+      "rule": "java:S2259",
+      "component": "my-project:src/App.java",
+      "type": "BUG",
+      "message": "A valid issue.",
+      "impacts": [{"softwareQuality": "RELIABILITY", "severity": "MEDIUM"}]
+    },
+    {"key": "NOFIELDS"},
+    {"rule": "java:S000", "component": "my-project:src/App.java", "type": "BUG", "message": "No key.", "impacts": [{"softwareQuality": "RELIABILITY", "severity": "LOW"}]},
+    {"key": "NOIMP001", "rule": "java:S000", "component": "my-project:src/App.java", "type": "BUG", "message": "Empty impacts.", "impacts": []}
+  ],
+  "total": 4,
+  "projectKey": "my-project"
+}

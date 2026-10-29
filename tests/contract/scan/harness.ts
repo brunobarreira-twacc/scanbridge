@@ -30,6 +30,7 @@ export function tempDir(prefix = 'scanbridge-e2e-'): string {
 export type ConfigOptions = {
   semgrepEnabled?: boolean;
   zapEnabled?: boolean;
+  sonarqubeEnabled?: boolean;
   semgrepConfig?: string;
   sessionMode?: 'require_clean' | 'reset';
   spiderTimeout?: number;
@@ -55,6 +56,12 @@ ${o.semgrepConfig ?? '      rules: [rules/security.yaml]\n'}  zap:
       session_mode: ${o.sessionMode ?? 'require_clean'}
       spider_timeout_seconds: ${o.spiderTimeout ?? 5}
       passive_timeout_seconds: ${o.passiveTimeout ?? 5}
+  sonarqube:
+    enabled: ${o.sonarqubeEnabled ?? false}
+    config:
+      api_url_env: SONARQUBE_URL
+      api_key_env: SONARQUBE_TOKEN
+      project_key_env: SONARQUBE_PROJECT
 `;
 }
 

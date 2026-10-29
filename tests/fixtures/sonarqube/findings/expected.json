@@ -1,0 +1,37 @@
+{
+  "parse": "ok",
+  "completeness": "complete",
+  "unusableCount": 0,
+  "diagnostics": [],
+  "coverageLoss": [],
+  "reasons": [],
+  "severityMappingVersion": "sonarqube-1",
+  "candidates": [
+    {
+      "ruleId": "javasecurity:S3649",
+      "producerReference": "AX123abc",
+      "producerFingerprint": "abc123hash",
+      "title": "SQL injection: change this code.",
+      "description": null,
+      "confidence": null,
+      "severityOriginal": "HIGH",
+      "severity": "high",
+      "redactionsApplied": false,
+      "sourcePath": "src/main/java/App.java",
+      "startLine": 42
+    },
+    {
+      "ruleId": "java:S2259",
+      "producerReference": "BX456def",
+      "producerFingerprint": null,
+      "title": "A NullPointerException could be thrown here.",
+      "description": null,
+      "confidence": null,
+      "severityOriginal": "BLOCKER",
+      "severity": "critical",
+      "redactionsApplied": false,
+      "sourcePath": "src/main/java/Util.java",
+      "startLine": 17
+    }
+  ]
+}

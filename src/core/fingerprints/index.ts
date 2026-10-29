@@ -5,6 +5,8 @@ export {
   fingerprintFromMaterial,
   semgrepDegraded,
   semgrepExact,
+  sonarqube,
+  sonarqubeDegraded,
   zap,
   type FingerprintMaterial,
 } from './fingerprint.js';
